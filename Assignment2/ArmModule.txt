@@ -1,0 +1,36 @@
+function move_arm(x, y, z, &optional angle &optional gripper &init "default"){
+
+/*z = -6.0;*/
+a2 = 25.5;
+a3 = 25.5;
+
+/*get magnitudes*/
+r = sqrt(x^2 + y^2 + z^2);
+r_xy = sqrt(x^2 + y^2);
+
+th3 = (180/PI) * acos((r^2 - a2^2 - a3^2)/(2*a2*a3));
+
+tempth1 = (180/PI) * atan((a3 * sin((PI/180)*th3))/(a2+a3*cos((PI/180)*th3)));
+
+tempth2 = (180/PI) * acos(r_xy/r);
+
+th2 = tempth1 - tempth2;
+
+th1 = (180/PI) * atan((y+ 0.0)/x);
+
+th4 = 90 + (th2 - th3);
+
+th5 = angle; /*need to be implemented when the orientation of the block is found*/
+
+	rob_move_abs(th1, th2, th3, th4, th5);
+
+	sleep(3);
+
+	if(gripper == "close"){
+		servo_close(50);
+	};
+	if(gripper == "open"){
+		servo_open(50);
+	};
+
+};
